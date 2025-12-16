@@ -71,11 +71,26 @@ jobs:
         if: always()  # 无论成功或失败都执行
         uses: curlimages/curl:latest
         with:
-          args: -X POST ${{ secrets.WEBHOOK_URL }}  -H "Content-Type: application/json"  -d "{\"msgtype\": \"text\", \"text\": {\"content\": \"GitHub Actions Workflow: ${{ github.workflow }} finished with status: ${{ job.status }}\"}}"
-
+          args: >
+            -X POST ${{ secrets.WEBHOOK_URL }}
+            -H "Content-Type: application/json"
+            -d '{
+                  "msgtype": "text",
+                  "text": {
+                    "content": "GitHub Actions Workflow: ${{ github.workflow }} finished with status: ${{ job.status }}"
+                  }
+                }'
 
       - name: Send failure alert to DingTalk
         if: failure()
         uses: curlimages/curl:latest
         with:
-          args: -X POST ${{ secrets.DINGTALK_WEBHOOK_URL }}  -H "Content-Type: application/json"  -d '{"msgtype": "text", "text": {"content": "⚠️ GitHub Actions Workflow: ${{ github.workflow }} 失败！请检查日志。"}}'
+          args: >
+            -X POST ${{ secrets.DINGTALK_WEBHOOK_URL }}
+            -H "Content-Type: application/json"
+            -d '{
+                  "msgtype": "text",
+                  "text": {
+                    "content": "⚠️ GitHub Actions Workflow: ${{ github.workflow }} 失败！请检查日志。"
+                  }
+                }'
