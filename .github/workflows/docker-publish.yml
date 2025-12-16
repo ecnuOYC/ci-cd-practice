@@ -54,8 +54,12 @@ jobs:
       - name: Build and push Docker image
         run: |
           OWNER=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
+          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+
           docker buildx build . \
             --tag ghcr.io/$OWNER/ci-cd-practice:latest \
+            --tag ghcr.io/$OWNER/ci-cd-practice:$SHORT_SHA \
             --push
         env:
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_SHA: ${{ github.sha }}
