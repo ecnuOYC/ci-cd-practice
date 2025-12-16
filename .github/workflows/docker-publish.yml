@@ -52,9 +52,10 @@ jobs:
 
       # 构建并推送
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          # 注意：镜像名称必须全部小写
-          tags: ghcr.io/${{ github.repository_owner }}/ci-cd-practice:latest
+        run: |
+          OWNER=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
+          docker buildx build . \
+            --tag ghcr.io/$OWNER/ci-cd-practice:latest \
+            --push
+        env:
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
